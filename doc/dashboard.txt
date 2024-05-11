@@ -80,6 +80,10 @@ OPTIONS                                      *dashboard-configuration-options*
       file_path     -- preview file path
       file_height   -- preview file height
       file_width    -- preview file width
+      row           -- optional, preview window start row
+      col           -- optional, preview window start col
+      padding_bottom  -- optional, padding after preview window,
+                      -- only respected when space is enough
     },
 <
 
