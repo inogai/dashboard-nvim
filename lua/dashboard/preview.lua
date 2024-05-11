@@ -4,13 +4,10 @@ local db = require('dashboard')
 local view = {}
 
 function view:open_window(opt)
-  local row = math.floor(opt.height / 5)
-  local col = math.floor((vim.o.columns - opt.width) / 2)
-
   local opts = {
     relative = 'editor',
-    row = row,
-    col = col,
+    row = opt.row,
+    col = opt.col,
     width = opt.width,
     height = opt.height,
     style = 'minimal',

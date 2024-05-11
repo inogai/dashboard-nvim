@@ -124,6 +124,8 @@ local function generate_header(config)
   api.nvim_buf_set_lines(config.bufnr, 0, -1, false, utils.center_align(empty_table))
   local preview = require('dashboard.preview')
   preview:open_preview({
+    row = config.row or math.floor(config.file_height / 5),
+    col = config.col or math.floor((vim.o.columns - config.file_width) / 2),
     width = config.file_width,
     height = config.file_height,
     cmd = config.command .. ' ' .. config.file_path,
