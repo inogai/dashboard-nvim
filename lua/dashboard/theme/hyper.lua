@@ -175,10 +175,13 @@ local function mru_list(config)
 
   if config.mru.cwd_only then
     local cwd = uv.cwd()
+    -- get separator from the first file
+    local sep = mlist[1]:match('[\\/]')
+    local cwd_with_sep = cwd:gsub('[\\/]', sep) .. sep
     mlist = vim.tbl_filter(function(file)
       local file_dir = vim.fn.fnamemodify(file, ':p:h')
-      if file_dir and cwd then
-        return file_dir:find(cwd, 1, true) == 1
+      if file_dir and cwd_with_sep then
+        return file_dir:sub(1, #cwd_with_sep) == cwd_with_sep
       end
     end, mlist)
   end
@@ -186,7 +189,7 @@ local function mru_list(config)
   for _, file in pairs(vim.list_slice(mlist, 1, config.mru.limit)) do
     local filename = vim.fn.fnamemodify(file, ':t')
     local icon, group = utils.get_icon(filename)
-    icon = icon or ' '
+    icon = icon or ''
     if config.mru.cwd_only then
       file = vim.fn.fnamemodify(file, ':.')
     elseif not utils.is_win then
@@ -402,14 +405,16 @@ local function gen_center(plist, config)
 
   for i, data in pairs(mgroups) do
     local len, group = unpack(data)
-    api.nvim_buf_add_highlight(
-      config.bufnr,
-      0,
-      group,
-      first_line + i + plist_len,
-      start_col,
-      start_col + len
-    )
+    if group then
+      api.nvim_buf_add_highlight(
+        config.bufnr,
+        0,
+        group,
+        first_line + i + plist_len,
+        start_col,
+        start_col + len
+      )
+    end
     api.nvim_buf_add_highlight(
       config.bufnr,
       0,
